@@ -1,3 +1,4 @@
+import * as animate from "@pixi/animate";
 import {useRef} from "react";
 import JSZip from "jszip";
 
@@ -21,6 +22,8 @@ export const useDrag = () => {
     },
     onDrop: e => {
       e.preventDefault();
+      switchDragClass(ref, "remove");
+
       const [archive] = e.dataTransfer.files;
 
       const reader = new FileReader();
@@ -30,33 +33,19 @@ export const useDrag = () => {
 
       async function unpack(e) {
         const {files} = await zipUnpacker.loadAsync(e.target.result);
-
         const jsFile = await Object.entries(files).find(([key]) => key.includes(".js"))[1].async("text");
+        const parsedJsFile = window.data = {exports: null};
+        eval(`(function (module) {
+          ${jsFile}
+        })(window.data)`);
 
-        /*const sortedFiles = Object.entries(files).reduce((acc, [key, value], index, arr) => {
-          const ext = SORT_ORDER.find(ext => key.endsWith(ext))?.slice(1);
-          if (!ext) return acc;
-          if (!acc[ext]) acc[ext] = [];
-          acc[ext].push(value);
-          if (index === arr.length - 1)
-            return {...acc, type: acc.hasOwnProperty("txt") ? TYPES.shapes : TYPES.frames};
-          return acc;
-        }, {});
-        debugger
-        const converted = await Object.entries(sortedFiles).reduce(async (accPromise, [key, array]) => {
-          const acc = await accPromise;
-          if (key === "type") return {...acc, [key]: array};
-          const convertedArray = await Promise.all(array.map(value => value.async("text")));
-          return {...acc, [key]: convertedArray};
-        }, Promise.resolve({}));
-
-        if (converted === TYPES.frames) {
-
+        async function unpackJson([key, value]) {
+          const necessaryFile = await files[value].async("text");
+          const necessaryFileBlob = new Blob([necessaryFile], {type: "text/plain"});
+          parsedJsFile.exports.assets[key] = URL.createObjectURL(necessaryFileBlob);
         }
 
-        if (converted === TYPES.shapes) {
-
-        }*/
+        await Promise.all(Object.entries(parsedJsFile.exports.assets).map(unpackJson));
       }
 
     },

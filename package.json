@@ -21,6 +21,8 @@
     "@next/bundle-analyzer": "^11.0.1",
     "@reduxjs/toolkit": "^1.8.5",
     "axios": "^0.27.2",
+    "@pixi/animate": "^2.0.3",
+    "pixi.js-legacy": "^6.5.8",
     "bowser": "latest",
     "classnames": "^2.3.1",
     "cross-env": "^7.0.2",
