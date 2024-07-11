@@ -1,0 +1,54 @@
+.pixi-animate-player {
+  width: 100%;
+  height: 100%;
+
+  position: relative;
+}
+
+.drag-area {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 90%;
+  height: 90%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 20px;
+
+  background-color: rgba(#000000, 0.2);
+
+  transition: .3s;
+
+  &_dragging {
+    background-color: rgba(#000000, 0.7);
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+
+    span {
+      font-size: 14px;
+      transition: .3s;
+    }
+
+    svg {
+      font-size: 24px;
+      transition: .3s;
+    }
+
+    &_dragging {
+      color: #ffffff;
+      svg, span {
+        color: #ffffff;
+      }
+    }
+  }
+}
